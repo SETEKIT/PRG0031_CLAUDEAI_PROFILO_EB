@@ -106,11 +106,34 @@ git pull
 
 ## Slash Commands
 
+### Comandi Base
+
+| Comando | Descrizione |
+|---------|-------------|
+| `/profili` | Lista profili disponibili |
+| `/profilo PRF01` | Carica profilo specifico |
+| `/security-check` | Quick security check |
+| `/piano` | Analisi convenienza piano Claude |
+| `/stats` | Statistiche utilizzo Claude AI |
+| `/stk-link-utili-add` | Aggiungi link a Google Sheet SETEK |
+
+### Report Generator
+
+| Comando | Descrizione |
+|---------|-------------|
+| `/report-stk-general-v1` | Genera report tecnico SETEK con tracking Google Sheets |
+
+**Uso:**
+```bash
+/report-stk-general-v1 documento.md
+/report-stk-general-v1 documento.md "Nome Progetto"
 ```
-/profili          # Lista profili disponibili
-/profilo PRF01    # Carica profilo specifico
-/security-check   # Quick security check
-```
+
+**Funzionalità:**
+- Genera report MD + HTML con 6 sezioni navigabili
+- Tracking accessi via Google Sheets (AISETEK)
+- Sezioni: Overview, Scores, Red Flags, Elementi Genuini, Detection, Fix Prioritari
+- Output: `REPORT_[NOME]_[DATA].md` e `.html`
 
 ## Configurazioni Sincronizzate
 
