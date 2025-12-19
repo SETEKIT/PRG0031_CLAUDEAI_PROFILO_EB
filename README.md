@@ -86,7 +86,7 @@ git pull
 | `install.sh` | Prima installazione su nuovo Mac |
 | `sync-push.sh` | Copia config locali → repository |
 | `sync-pull.sh` | Copia config repository → locali |
-| `backup.sh` | Crea backup completo in `backups/` |
+| `backup.sh` | Crea backup completo (usa `--icloud` per sync su iCloud Drive) |
 | `restore.sh` | Restore con menu selezione backup |
 | `export-chats.py` | Esporta chat in formato Markdown |
 | `lib/credentials-loader.sh` | Libreria per caricare credenziali |

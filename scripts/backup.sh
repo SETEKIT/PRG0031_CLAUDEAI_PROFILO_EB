@@ -3,6 +3,10 @@
 # CLAUDE CODE - Backup Completo
 # Autore: Eliseo Bosco
 # Progetto: PRG0031_CLAUDEAI_PROFILO_EB
+#
+# Uso:
+#   ./backup.sh              # Backup locale
+#   ./backup.sh --icloud     # Backup locale + copia su iCloud Drive
 # =============================================================================
 
 set -e
@@ -13,6 +17,15 @@ BACKUP_BASE="$PROJECT_DIR/backups"
 CLAUDE_HOME="$HOME/.claude"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BACKUP_DIR="$BACKUP_BASE/backup-$TIMESTAMP"
+
+# iCloud Drive path
+ICLOUD_BACKUP_DIR="$HOME/Library/Mobile Documents/com~apple~CloudDocs/SETEK/backups-claude"
+
+# Opzioni
+SYNC_ICLOUD=false
+if [[ "$1" == "--icloud" ]] || [[ "$1" == "-i" ]]; then
+    SYNC_ICLOUD=true
+fi
 
 # Colori
 RED='\033[0;31m'
@@ -118,4 +131,38 @@ BACKUP_COUNT=$(ls -1d "$BACKUP_BASE"/backup-* 2>/dev/null | wc -l | tr -d ' ')
 if [ "$BACKUP_COUNT" -gt 5 ]; then
     echo ""
     echo -e "${YELLOW}Hai $BACKUP_COUNT backup. Considera di eliminare quelli vecchi.${NC}"
+fi
+
+# Sync su iCloud Drive
+if [ "$SYNC_ICLOUD" = true ]; then
+    echo ""
+    echo -e "${CYAN}Sincronizzazione iCloud Drive...${NC}"
+
+    # Crea directory iCloud se non esiste
+    mkdir -p "$ICLOUD_BACKUP_DIR"
+
+    # Copia backup su iCloud
+    cp -r "$BACKUP_DIR" "$ICLOUD_BACKUP_DIR/"
+
+    echo -e "${GREEN}Backup copiato su iCloud Drive!${NC}"
+    echo -e "${CYAN}Percorso iCloud:${NC} $ICLOUD_BACKUP_DIR/backup-$TIMESTAMP"
+
+    # Lista backup su iCloud
+    echo ""
+    echo -e "${CYAN}Backup su iCloud Drive:${NC}"
+    ls -1d "$ICLOUD_BACKUP_DIR"/backup-* 2>/dev/null | while read dir; do
+        echo "  $(basename "$dir")"
+    done
+
+    # Cleanup vecchi backup iCloud (mantieni ultimi 5)
+    ICLOUD_COUNT=$(ls -1d "$ICLOUD_BACKUP_DIR"/backup-* 2>/dev/null | wc -l | tr -d ' ')
+    if [ "$ICLOUD_COUNT" -gt 5 ]; then
+        echo ""
+        echo -e "${YELLOW}Pulizia backup iCloud vecchi (mantengo ultimi 5)...${NC}"
+        ls -1dt "$ICLOUD_BACKUP_DIR"/backup-* | tail -n +6 | xargs rm -rf
+        echo -e "${GREEN}Pulizia completata.${NC}"
+    fi
+else
+    echo ""
+    echo -e "${YELLOW}Tip: usa --icloud per sincronizzare anche su iCloud Drive${NC}"
 fi
